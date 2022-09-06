@@ -1,10 +1,12 @@
-import React from 'react';
+import React, {
+  useCallback, useEffect, useRef, useState,
+} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   Card, CardBody, CardFooter, CardHeader, Error, Loading, MessageItem,
 } from '../components';
 import useAxios from '../hooks/useAxios';
-import { User } from '../types';
+import { Message, User } from '../types';
 
 const mockMessages = [
   {
@@ -27,7 +29,31 @@ const mockMessages = [
 const Chat = (): JSX.Element => {
   const { id } = useParams();
   const { data: user, loading, error } = useAxios<User>(`https://dummyjson.com/users/${id as string}`);
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [message, setMessage] = useState('');
   const navigate = useNavigate();
+  const sampleId = useRef(3);
+
+  useEffect(() => {
+    setMessages(mockMessages);
+  }, []);
+
+  const handleFormSubmit = useCallback((event: any) => {
+    event.preventDefault();
+    setMessages([
+      ...messages,
+      {
+        id: sampleId.current += 1,
+        sent: true,
+        text: message,
+      },
+    ]);
+    setMessage('');
+  }, [messages, message]);
+
+  const handleInputChange = useCallback((event: any) => {
+    setMessage(event.target.value);
+  }, []);
 
   if (loading) {
     return <Loading />;
@@ -43,19 +69,23 @@ const Chat = (): JSX.Element => {
       <CardBody>
         <ul className="space-y-2 p-5">
           {
-            mockMessages.map((item) => (
+            messages.map((item) => (
               <MessageItem key={item.id} message={item} />
             ))
           }
         </ul>
       </CardBody>
       <CardFooter>
-        <input
-          autoFocus
-          type="text"
-          className="text-gray-900 rounded-b block w-full p-4 focus-visible:outline-none overflow-hidden"
-          placeholder="Type your message..."
-        />
+        <form onSubmit={handleFormSubmit} className="w-full">
+          <input
+            autoFocus
+            type="text"
+            className="text-gray-900 rounded-b block w-full p-4 focus-visible:outline-none overflow-hidden"
+            placeholder="Type your message..."
+            value={message}
+            onChange={handleInputChange}
+          />
+        </form>
       </CardFooter>
     </Card>
   );
