@@ -14,16 +14,14 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <BrowserRouter>
-    <div className="w-screen h-screen bg-gray-50 flex justify-center items-center">
-      <div className="bg-white shadow rounded-xl w-[90vw] h-[90vh] max-w-3xl p-4">
-        <Routes>
-          <Route path="/">
-            <Route index element={<Chats />} />
-            <Route path=":username" element={<Chat />} />
-            <Route path=":username/profile" element={<Profile />} />
-          </Route>
-        </Routes>
-      </div>
+    <div className="w-screen h-screen bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 flex justify-center items-center">
+      <Routes>
+        <Route path="/">
+          <Route index element={<Chats />} />
+          <Route path=":id" element={<Chat />} />
+          <Route path=":id/profile" element={<Profile />} />
+        </Route>
+      </Routes>
     </div>
   </BrowserRouter>,
 );

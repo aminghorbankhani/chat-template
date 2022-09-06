@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  .card {
+    @apply bg-white shadow-lg rounded w-[90vw] h-[90vh] max-w-3xl flex flex-col
+  }
+
+  @layer utilities {
+    .scrollbar {
+      scrollbar-color: #ddd transparent;
+      scrollbar-width: thin;
+    }
+
+    .scrollbar::-webkit-scrollbar {
+      width: 8px;
+    }
+  
+    .scrollbar::-webkit-scrollbar-thumb {
+      background: #ddd;
+      border: 3px solid #ddd;
+    }
+  }
+}
