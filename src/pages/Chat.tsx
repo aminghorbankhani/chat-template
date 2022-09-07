@@ -3,43 +3,25 @@ import React, {
 } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
-  Card, CardBody, CardFooter, CardHeader, Error, Loading, MessageItem,
+  Card, CardBody, CardHeader, Error, Loading, MessageInput, MessageItem,
 } from '../components';
 import useAxios from '../hooks/useAxios';
+import mockMessages from '../mock-messages';
 import { Message, User } from '../types';
-
-const mockMessages = [
-  {
-    id: 1,
-    sent: false,
-    text: 'Hi!',
-  },
-  {
-    id: 2,
-    sent: true,
-    text: 'Hello!',
-  },
-  {
-    id: 3,
-    sent: false,
-    text: 'How is it going?',
-  },
-];
 
 const Chat = (): JSX.Element => {
   const { id } = useParams();
   const { data: user, loading, error } = useAxios<User>(`https://dummyjson.com/users/${id as string}`);
   const [messages, setMessages] = useState<Message[]>([]);
-  const [message, setMessage] = useState('');
   const navigate = useNavigate();
-  const sampleId = useRef(3);
+  const sampleId = useRef(11);
+  const emptyDivRef = useRef<HTMLDivElement>();
 
   useEffect(() => {
     setMessages(mockMessages);
   }, []);
 
-  const handleFormSubmit = useCallback((event: any) => {
-    event.preventDefault();
+  const sendMessage = useCallback((message: string) => {
     setMessages([
       ...messages,
       {
@@ -48,11 +30,19 @@ const Chat = (): JSX.Element => {
         text: message,
       },
     ]);
-    setMessage('');
-  }, [messages, message]);
+  }, [messages]);
 
-  const handleInputChange = useCallback((event: any) => {
-    setMessage(event.target.value);
+  const scrollToBottom = useCallback(() => {
+    emptyDivRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const setEmptyDivRef = useCallback((ref: HTMLDivElement) => {
+    emptyDivRef.current = ref;
+    scrollToBottom();
   }, []);
 
   if (loading) {
@@ -74,19 +64,9 @@ const Chat = (): JSX.Element => {
             ))
           }
         </ul>
+        <div ref={setEmptyDivRef} />
       </CardBody>
-      <CardFooter>
-        <form onSubmit={handleFormSubmit} className="w-full">
-          <input
-            autoFocus
-            type="text"
-            className="text-gray-900 rounded-b block w-full p-4 focus-visible:outline-none overflow-hidden"
-            placeholder="Type your message..."
-            value={message}
-            onChange={handleInputChange}
-          />
-        </form>
-      </CardFooter>
+      <MessageInput onSubmit={sendMessage} />
     </Card>
   );
 };

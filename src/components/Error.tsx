@@ -1,6 +1,6 @@
 import React from 'react';
-import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import Card from './Card';
 
 const Error = ({ message }: { message: string }): JSX.Element => (
