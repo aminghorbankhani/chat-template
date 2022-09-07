@@ -47,7 +47,7 @@ export default [
   {
     id: 10,
     sent: true,
-    text: 'It sounds like a fabulous car then!',
+    text: 'It sounds like a fabulous car!',
   },
   {
     id: 11,
