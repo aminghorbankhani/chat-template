@@ -1,9 +1,9 @@
 import React, {
   useCallback, useEffect, useRef, useState,
 } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
-  Card, CardBody, CardHeader, Error, Loading, MessageInput, MessageItem,
+  Card, CardBody, CardHeader, CardHeaderBackButton, Error, Loading, MessageInput, MessageItem,
 } from '../components';
 import useAxios from '../hooks/useAxios';
 import mockMessages from '../mock-messages';
@@ -14,10 +14,12 @@ const Chat = (): JSX.Element => {
   const { data: user, loading, error } = useAxios<User>(`https://dummyjson.com/users/${id as string}`);
   const [messages, setMessages] = useState<Message[]>([]);
   const navigate = useNavigate();
-  const sampleId = useRef(11);
   const emptyDivRef = useRef<HTMLDivElement>();
+  // sample id for new messages (to support key for loop)
+  const sampleId = useRef(11);
 
   useEffect(() => {
+    // Get and set mock messages from 'mock-messages.js'
     setMessages(mockMessages);
   }, []);
 
@@ -55,9 +57,15 @@ const Chat = (): JSX.Element => {
 
   return (
     <Card>
-      <CardHeader title={`Chat with ${user.firstName}`} onBack={() => navigate(-1)} />
+      <CardHeader>
+        <CardHeaderBackButton onBack={() => navigate(-1)} />
+        <Link to={`/${user.id}/profile`} className="flex flex-row text-blue-600">
+          <img src={user.image} alt={user.username} className="w-7 h-7 bg-indigo-300 rounded-full mr-3" />
+          <h1 className="text-lg">{user.firstName}</h1>
+        </Link>
+      </CardHeader>
       <CardBody>
-        <ul className="space-y-2 p-5">
+        <ul className="space-y-3 p-5">
           {
             messages.map((item) => (
               <MessageItem key={item.id} message={item} />

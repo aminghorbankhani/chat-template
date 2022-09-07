@@ -18,7 +18,9 @@ const Chats = (): JSX.Element => {
 
   return (
     <Card>
-      <CardHeader title="Chats" />
+      <CardHeader>
+        <h1 className="text-lg">Chats</h1>
+      </CardHeader>
       <CardBody>
         <ul className="list-none">
           {data.users.map((user) => (

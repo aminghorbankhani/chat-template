@@ -7,6 +7,10 @@ interface User {
   image: string
   phone: string
   age: string
+  birthDate: string
+  gender: string
+  eyeColor: string
+  domain: string
 }
 
 export default User;
